@@ -25,10 +25,7 @@ Date date = new Date(0);
  
 
 // the area where we receive the entries
-
-
  //  get entry    from table
-
 public NetworkTableEntry m_odometry=table.getEntry(" m_odometry");
 public NetworkTableEntry Pressure=table.getEntry("Pressure");
 public NetworkTableEntry battery_voltage =table.getEntry("Battery Voltage");
@@ -36,17 +33,14 @@ public NetworkTableEntry turretStatus =table.getEntry("turret Status");
 public NetworkTableEntry  shooter_RPM =table.getEntry(" shooter RPM");
 public NetworkTableEntry  shooterVelocity=table.getEntry("shooterVelocity");
 
-//add data listener
-public void addListener(Object RobotController) {
-   //for odometry
+     //add data listener
+     public void addListener(Object RobotController) {
+     //for odometry
     table.addEntryListener("m_odometry", (table, key, entry,  value,flags)-> {
      double m_odometry = value.getDouble();
     System.out.println("odometry  changed "+ m_odometry);   
 
     }, EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate | EntryListenerFlags.kNew);
-
-
- 
 
 
      // for pressure 
@@ -81,8 +75,6 @@ public void addListener(Object RobotController) {
      }, EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate | EntryListenerFlags.kNew);
  
 
-
-     
      // for shooter Velocity
      table.addEntryListener("shooterVelocity", (table, key, entry,  value,flags)-> {
       double shooterVelocity= value.getDouble();
@@ -91,11 +83,11 @@ public void addListener(Object RobotController) {
      }, EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate | EntryListenerFlags.kNew);
  
 
- // adding  to csv file 
+    // adding  to csv file 
 
- SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
- Date date = new Date(System.currentTimeMillis());
- csvString +=(formatter.format(date)+m_odometry+Pressure+ battery_voltage+turretStatus+shooter_RPM+shooterVelocity+"\n");
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    Date date = new Date(System.currentTimeMillis());
+    csvString +=(formatter.format(date)+m_odometry+Pressure+ battery_voltage+turretStatus+shooter_RPM+shooterVelocity+"\n");
   try {
 
    fw = new FileWriter(file);

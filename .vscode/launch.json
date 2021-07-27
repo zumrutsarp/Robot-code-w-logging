@@ -1,6 +1,13 @@
 {
   "configurations": [
     {
+      "type": "java",
+      "name": "Launch Main",
+      "request": "launch",
+      "mainClass": "frc.robot.Main",
+      "projectName": "robot-2021-offseason"
+    },
+    {
       "desktop": true,
       "name": "WPILib Desktop Debug",
       "request": "launch",

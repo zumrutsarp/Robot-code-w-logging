@@ -12,15 +12,16 @@ import java.util.ArrayList;
 
 public class LogSubsystem {
 
+
 private static ArrayList<String> entryList;
 File file=new File("C:/log.csv");
 String csvString = "";
+
 
  // for client 
 NetworkTableInstance inst = NetworkTableInstance.getDefault();
 NetworkTable table = inst.getTable("datatable");
  
-
 
 public void  getLog( String entryName,String level){
 
@@ -38,7 +39,6 @@ public void  getLog( String entryName,String level){
   switch(level)
 
   {
-
      case "Info": csvString += ("INFO:"+formatter.format(date)+"\n");   break;
     
      case "Debug": csvString += ("DEBUG:"+formatter.format(date)+"\n");  break; 
@@ -48,6 +48,8 @@ public void  getLog( String entryName,String level){
      case "Warning":   csvString += ("WARNİNG:"+formatter.format(date)+entryList+"\n");  break;
    }
    
+
+
 
    try {
 

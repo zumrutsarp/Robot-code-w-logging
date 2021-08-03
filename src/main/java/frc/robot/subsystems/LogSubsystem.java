@@ -1,104 +1,67 @@
 package frc.robot.subsystems;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.EntryListenerFlags;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.File;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 
 public class LogSubsystem {
 
-File file=new File("C:/log.txt");
-FileWriter fw = null;
-BufferedWriter bw = null;
+private static ArrayList<String> entryList;
+File file=new File("C:/log.csv");
 String csvString = "";
-Date date = new Date(0);
 
-  // for client 
- NetworkTableInstance inst = NetworkTableInstance.getDefault();
- NetworkTable table = inst.getTable("datatable");
+ // for client 
+NetworkTableInstance inst = NetworkTableInstance.getDefault();
+NetworkTable table = inst.getTable("datatable");
  
 
-// the area where we receive the entries
- //  get entry    from table
-public NetworkTableEntry m_odometry=table.getEntry(" m_odometry");
-public NetworkTableEntry Pressure=table.getEntry("Pressure");
-public NetworkTableEntry battery_voltage =table.getEntry("Battery Voltage");
-public NetworkTableEntry turretStatus =table.getEntry("turret Status");
-public NetworkTableEntry  shooter_RPM =table.getEntry(" shooter RPM");
-public NetworkTableEntry  shooterVelocity=table.getEntry("shooterVelocity");
 
-     //add data listener
-     public void addListener(Object RobotController) {
-     //for odometry
-    table.addEntryListener("m_odometry", (table, key, entry,  value,flags)-> {
-     double m_odometry = value.getDouble();
-    System.out.println("odometry  changed "+ m_odometry);   
+public void  getLog( String entryName,String level){
 
-    }, EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate | EntryListenerFlags.kNew);
-
-
-     // for pressure 
-     table.addEntryListener("Pressure", (table, key, entry,  value,flags)-> {
-      double Pressure= value.getDouble();
-     System.out.println("Pressure  changed "+ Pressure);   
- 
-     }, EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate | EntryListenerFlags.kNew);
- 
-
-     // for battery voltage
-     table.addEntryListener("  battery_voltage ", (table, key, entry,  value,flags)-> {
-      double  battery_voltage = value.getDouble();
-     System.out.println("  battery voltage   changed "+   battery_voltage );   
- 
-     }, EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate | EntryListenerFlags.kNew);
- 
-
-     // for turret
-     table.addEntryListener("turretStatus", (table, key, entry,  value,flags)-> {
-      double turretStatus= value.getDouble();
-     System.out.println("turretStatus changed "+ turretStatus);   
- 
-     }, EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate | EntryListenerFlags.kNew);
- 
-
-     //for shooter RPM
-    table.addEntryListener("shooter_RPM", (table, key, entry,  value,flags)-> {
-      double shooter_RPM = value.getDouble();
-     System.out.println("shooter RPM  changed "+shooter_RPM);   
- 
-     }, EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate | EntryListenerFlags.kNew);
- 
-
-     // for shooter Velocity
-     table.addEntryListener("shooterVelocity", (table, key, entry,  value,flags)-> {
-      double shooterVelocity= value.getDouble();
-     System.out.println("shooter Velocity  changed "+ shooterVelocity);   
- 
-     }, EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate | EntryListenerFlags.kNew);
- 
-
-    // adding  to csv file 
-
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-    Date date = new Date(System.currentTimeMillis());
-    csvString +=(formatter.format(date)+m_odometry+Pressure+ battery_voltage+turretStatus+shooter_RPM+shooterVelocity+"\n");
-  try {
-
-   fw = new FileWriter(file);
-   bw = new BufferedWriter(fw);
-  bw.write(csvString);
- 
-  bw.close();
-} catch (IOException ioe) {
-   ioe.printStackTrace();
-   }
+  // the method get our entries
+  entryList = new ArrayList<>();
+  table.getEntry(entryName);
+  entryList.add(table.getEntry( entryName).getName()); 
   
 
+  // Time stamp
+  SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+  Date date = new Date(System.currentTimeMillis());
+
+
+  switch(level)
+
+  {
+
+     case "Info": csvString += ("INFO:"+formatter.format(date)+"\n");   break;
+    
+     case "Debug": csvString += ("DEBUG:"+formatter.format(date)+"\n");  break; 
+
+    case "Eror":   csvString += ("EROR:"+formatter.format(date)+"\n");   break;
+    
+     case "Warning":   csvString += ("WARNİNG:"+formatter.format(date)+entryList+"\n");  break;
+   }
+   
+
+   try {
+
+    FileWriter fw  = new FileWriter(file);
+    BufferedWriter bw = new BufferedWriter(fw);
+    bw.write(csvString);
+    bw.close();
+    }
+
+  catch (IOException ioe) {
+    ioe.printStackTrace();
+    }
+
+
 }
-}
+     
+    }
